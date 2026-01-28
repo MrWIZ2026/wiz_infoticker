@@ -472,10 +472,7 @@ def fetch_witz_events() -> list[dict]:
 def run():
     is_manual = os.environ.get("GITHUB_EVENT_NAME", "") == "workflow_dispatch"
     if not is_manual:
-        now_berlin = datetime.now(ZoneInfo("Europe/Berlin"))
-        if now_berlin.hour != 7:
-            return
-
+       
     state = load_state()
     posted = set(state.get("posted", []))
 
