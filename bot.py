@@ -9,8 +9,8 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 
-INFO_URL = "https://sessionnet.owl-it.de/witzenhausen/BI/info.asp"
-BASE = "https://sessionnet.owl-it.de/witzenhausen/BI/"
+INFO_URL = "https://sessionnet.owl-it.de/witzenhausen/bi/info.asp"
+BASE = "https://sessionnet.owl-it.de/witzenhausen/bi/"
 
 STATE_FILE = "state.json"
 
@@ -105,6 +105,7 @@ def parse_text_events_from_info(html: str) -> list[dict]:
 
     events = []
     i = idx + 1
+
     while i < len(lines):
         line = lines[i]
 
@@ -115,38 +116,49 @@ def parse_text_events_from_info(html: str) -> list[dict]:
             i += 1
             continue
 
-        if re.match(r"^\d{2}\.\d{2}\.\d{4}\b", line):
-            date_str = line[:10]
-            rest = normalize_ws(line[10:])
-            title = rest if rest else ""
-
-            j = i + 1
-            while j < len(lines) and not lines[j]:
-                j += 1
-            if j >= len(lines):
-                break
-            time_line = strip_bullets(lines[j])
-
-            k = j + 1
-            while k < len(lines) and not lines[k]:
-                k += 1
-            location_line = strip_bullets(lines[k]) if k < len(lines) else ""
-
-            uid = stable_text_uid(date_str, title, time_line, location_line)
-            events.append({
-                "uid": uid,
-                "gremium": title,
-                "datum": date_str,
-                "zeit": time_line,
-                "raum": location_line,
-                "url": INFO_URL,
-                "source": "text",
-            })
-
-            i = k + 1
+        m = re.match(r"^(\d{2}\.\d{2}\.\d{4})\b(.*)$", line)
+        if not m:
+            i += 1
             continue
 
-        i += 1
+        date_str = m.group(1)
+        rest = normalize_ws(m.group(2))
+
+        j = i + 1
+        while j < len(lines) and not lines[j]:
+            j += 1
+
+        if rest:
+            title = rest
+        else:
+            if j >= len(lines):
+                break
+            title = normalize_ws(lines[j])
+            j += 1
+
+        while j < len(lines) and (not lines[j] or lines[j] in DAY_TOKENS):
+            j += 1
+        if j >= len(lines):
+            break
+        time_line = strip_bullets(lines[j])
+        j += 1
+
+        while j < len(lines) and (not lines[j] or lines[j] in DAY_TOKENS):
+            j += 1
+        location_line = strip_bullets(lines[j]) if j < len(lines) else ""
+
+        uid = stable_text_uid(date_str, title, time_line, location_line)
+        events.append({
+            "uid": uid,
+            "gremium": title,
+            "datum": date_str,
+            "zeit": time_line,
+            "raum": location_line,
+            "url": INFO_URL,
+            "source": "text",
+        })
+
+        i = j + 1
 
     return events
 
