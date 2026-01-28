@@ -3,7 +3,7 @@ name: WIZ Infoticker Bot
 on:
   schedule:
     # Jede Stunde zur Minute 10
-    - cron: "15 * * * *"
+    - cron: "0 9 * * 0"
   workflow_dispatch: {}
 
 jobs:
