@@ -22,7 +22,16 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
-        
+
+      - name: Telegram test message
+        env:
+          TG_TOKEN: ${{ secrets.TG_TOKEN }}
+          TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
+        run: |
+          curl -sS -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+            -H "Content-Type: application/json" \
+            -d "{\"chat_id\":\"${TG_CHAT_ID}\",\"text\":\"TEST: GitHub Actions sendMessage ok\",\"disable_web_page_preview\":true}"
+
       - name: Run bot
         env:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
