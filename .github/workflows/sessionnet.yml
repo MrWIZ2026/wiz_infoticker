@@ -1,5 +1,8 @@
 name: WIZ Infoticker Bot
 
+permissions:
+  contents: write
+
 on:
   schedule:
     # Jede Stunde zur Minute 10
