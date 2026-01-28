@@ -32,16 +32,29 @@ jobs:
             -d "{\"chat_id\":\"${TG_CHAT_ID}\",\"text\":\"TEST: GitHub Actions sendMessage ok\",\"disable_web_page_preview\":true}"
 
       - name: Run bot
+        continue-on-error: true
         env:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
-          POST_EXISTING: "1"
-        run: python bot.py
+          POST_EXISTING: "0"
+        run: python -u bot.py
+
+      - name: Show state and repo status
+        if: always()
+        run: |
+          echo "=== ls -la ==="
+          ls -la
+          echo "=== git status ==="
+          git status
+          echo "=== state.json (head) ==="
+          if [ -f state.json ]; then head -n 40 state.json; else echo "state.json missing"; fi
 
       - name: Commit state
+        continue-on-error: true
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add state.json || true
           git commit -m "Update state" || true
+          git pull --rebase || true
           git push || true
