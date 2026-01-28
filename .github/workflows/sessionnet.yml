@@ -28,6 +28,7 @@ jobs:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
           POST_EXISTING: "1"
+          FORCE_RUN: "1"
         run: python bot.py
 
       - name: Commit state
