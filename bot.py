@@ -187,13 +187,25 @@ def parse_linked_events_from_info(html: str) -> list[dict]:
     return events
 
 def format_message(ev: dict) -> str:
-    return (
-        f"Gremium: {normalize_ws(ev.get('gremium',''))}\n"
-        f"Datum: {normalize_ws(ev.get('datum',''))}\n"
-        f"Zeit: {normalize_ws(ev.get('zeit',''))}\n"
-        f"Ort: {normalize_ws(ev.get('raum',''))}\n"
-        f"Link: {ev.get('url','')}"
-    )
+    title = normalize_ws(ev.get("gremium", ""))
+    datum = normalize_ws(ev.get("datum", ""))
+    zeit = normalize_ws(ev.get("zeit", ""))
+    ort = normalize_ws(ev.get("raum", ""))
+    url = (ev.get("url", "") or "").strip()
+
+    lines = []
+    if title:
+        lines.append(title)
+    if datum:
+        lines.append(datum)
+    if zeit:
+        lines.append(zeit)
+    if ort:
+        lines.append(ort)
+    if url:
+        lines.append(f"Link: {url}")
+
+    return "\n".join(lines).strip()
 
 def event_sort_key(ev: dict):
     d = parse_date(normalize_ws(ev.get("datum", ""))) or datetime.max.date()
