@@ -4,6 +4,7 @@ import json
 import time
 import hashlib
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from urllib.parse import urljoin
 
 import requests
@@ -213,6 +214,10 @@ def event_sort_key(ev: dict):
     return (d.isoformat(), t, normalize_ws(ev.get("gremium", "")).lower())
 
 def run():
+    now_berlin = datetime.now(ZoneInfo("Europe/Berlin"))
+    if now_berlin.hour != 6:
+        return
+        
     r = session.get(INFO_URL, timeout=30)
     r.raise_for_status()
     html = r.text
