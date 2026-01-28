@@ -176,7 +176,6 @@ def parse_linked_events_from_info(html: str) -> list[dict]:
 
 def format_message(ev: dict) -> str:
     return (
-        "Neue Sitzung in SessionNet Witzenhausen\n"
         f"Gremium: {normalize_ws(ev.get('gremium',''))}\n"
         f"Datum: {normalize_ws(ev.get('datum',''))}\n"
         f"Zeit: {normalize_ws(ev.get('zeit',''))}\n"
