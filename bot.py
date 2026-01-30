@@ -203,7 +203,7 @@ def format_message(ev: dict) -> str:
     if ort:
         lines.append(ort)
     if url:
-        lines.append(f"Link: {url}")
+        lines.append(f"Infos: {url}")
 
     return "\n".join(lines).strip()
 
