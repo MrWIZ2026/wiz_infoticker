@@ -200,7 +200,7 @@ def format_message(ev: dict) -> str:
 
     lines = []
     if title:
-        lines.append(title)
+        lines.append(f"<b>{title}</b>")
     if datum:
         lines.append(datum)
     if zeit:
