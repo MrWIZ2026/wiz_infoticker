@@ -26,7 +26,7 @@ jobs:
         env:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
           TG_CHAT_ID: ${{ secrets.TG_CHAT_ID }}
-          POST_EXISTING: "0"
+          POST_EXISTING: "1"
         run: python -u bot.py
 
       - name: Commit state
