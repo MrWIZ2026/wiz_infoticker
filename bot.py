@@ -38,7 +38,12 @@ def save_state(state: dict) -> None:
 
 def tg_send(text: str) -> None:
     url = f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage"
-    payload = {"chat_id": TG_CHAT_ID, "text": text, "disable_web_page_preview": True}
+    payload = {
+        "chat_id": TG_CHAT_ID,
+        "text": text,
+        "parse_mode": "HTML",
+        "disable_web_page_preview": True
+    }
     r = requests.post(url, json=payload, timeout=30)
     r.raise_for_status()
 
@@ -203,7 +208,7 @@ def format_message(ev: dict) -> str:
     if ort:
         lines.append(ort)
     if url:
-        lines.append(f"Infos: {url}")
+        lines.append(f'<a href="{url}">Infos</a>')
 
     return "\n".join(lines).strip()
 
